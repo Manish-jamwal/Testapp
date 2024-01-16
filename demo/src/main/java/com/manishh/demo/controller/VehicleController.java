@@ -32,8 +32,13 @@ public class VehicleController {
 
     @PostMapping("/vehicles")
     public String CreateNewVehicle(@RequestBody Vehicle vehicle) {
+        if (vehicle == null) {
+            return "Bad_request";
+        }
+        else{
         vehicleRepository.save(vehicle);
         return "Vehicle created successfully";
+        }
     }
 
     @GetMapping("/vehicles")
@@ -45,6 +50,10 @@ public class VehicleController {
 
     @GetMapping("/vehicles/{uid}")
     public ResponseEntity<Vehicle> getVehicleById(@PathVariable Long uid){
+        if (uid == null) {
+            return new ResponseEntity<Vehicle>(HttpStatus.BAD_REQUEST);
+        }
+        else{
         Optional<Vehicle> veh = vehicleRepository.findById(uid);
 
         if(veh.isPresent()){
@@ -54,9 +63,11 @@ public class VehicleController {
             return new ResponseEntity<Vehicle>(HttpStatus.NOT_FOUND);
         }
     }
+    }
 
     @PutMapping("/vehicles/{uid}")
     public String updateVehicleById(@PathVariable long uid,@RequestBody Vehicle vehicle){
+        
         Optional<Vehicle> veh = vehicleRepository.findById(uid);
         if(veh.isPresent()){
             Vehicle existveh = veh.get();
@@ -75,9 +86,14 @@ public class VehicleController {
 
     @DeleteMapping("/vehicles/{uid}")
     public String deleteVehicleById(@PathVariable Long uid){
+        if (uid == null) {
+            return "HttpStatus.BAD_REQUEST";
+        }
+        else{
         vehicleRepository.deleteById(uid);
         return "Vehicle deleted successfully";
     }
+}
 
 
 }
